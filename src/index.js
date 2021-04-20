@@ -10,10 +10,10 @@ app.use(express.json());
 
 app.post("/users",(req,res)=>{
     const user = new User(req.body);
-    user.save().then((result) =>{
-        res.send("User created successfully",user);
-    }).catch((error)=>{
-        res.send("Unable to create user!",error);
+    user.save().then(() =>{
+        res.status(200).send(user);
+    }).catch((e)=>{
+        res.status(400).send(error);
     })
 
 })
