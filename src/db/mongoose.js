@@ -4,7 +4,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api',{
     useCreateIndex: true,
     useUnifiedTopology:true
 });
-console.log("Connected!");
+console.log("DB is Connected!");
 
 // const me = new User({
 //     name:"Jordan",
