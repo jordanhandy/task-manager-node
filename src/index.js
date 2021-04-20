@@ -39,7 +39,7 @@ app.get("/users/:id",(req,res)=>{
     const _id = req.params.id; // find by ID
     User.findById(_id).then((user)=>{
         if(!user){
-            return res.status(404).send();
+            return res.status(404).send(); // 404
         }
         res.status(200).send(user);
     }).catch((error)=>{
@@ -58,6 +58,9 @@ app.get('/tasks',(req,res)=>{
 app.get('/tasks/:id',(req,res)=>{
     const _id = req.params.id; // find by ID
     Task.findById(_id).then((task)=>{
+        if(!task){
+            return res.status(404).send() // 404
+        }
         res.status(200).send(task)
     }).catch((error)=>{
         res.status(500).send(error);
