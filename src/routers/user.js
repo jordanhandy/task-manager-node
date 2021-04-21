@@ -9,9 +9,18 @@ router.post("/users",async (req,res)=>{ // POST to users
         await user.save();
         res.status(201).send(user); // if successful
     }catch(e){ 
-        res.status(400).send(); // if unsuccessful
+        res.status(400).send(e); // if unsuccessful
     }
 
+})
+
+router.post("/users/login",async(req,res)=>{
+    try{
+        const user = await User.findByCredentials(req.body.email,req.body.password);
+        res.send(user);
+    }catch(e){
+        res.status(400).send();
+    }
 })
 
 router.get("/users",async (req,res)=>{
