@@ -23,11 +23,11 @@ app.post("/users",async (req,res)=>{ // POST to users
 
 app.get("/users",async (req,res)=>{
     try{
-        const users = await User.find({});
-        res.status(200).send(users);
+        const users = await User.find({}); // find users
+        res.status(200).send(users); // send back
 
     }catch(e){
-        res.status(500).send(e);
+        res.status(500).send(e); // error
 
     }
 })
@@ -37,28 +37,28 @@ app.get("/users/:id", async (req,res)=>{
     try{
         const user = await User.findById(_id);
         if(!user){
-            return res.status(404).send();
+            return res.status(404).send(); // 404 if user not found
         }
-        res.status(200).send(user);
+        res.status(200).send(user); // otherwise, send user
     }catch(e){
-        res.status(500).semd(e);
+        res.status(500).send(e);
     }
 })
 
 app.patch('/users/:id',async(req,res) =>{
-    const updates = Object.keys(req.body);
-    const allowedUpdates = ["name","email","password","age"];
-    isValidOperation = updates.every((update)=>{
+    const updates = Object.keys(req.body); // for updates, get keys of JSON params
+    const allowedUpdates = ["name","email","password","age"]; // allowed update params
+    isValidOperation = updates.every((update)=>{ // for every key, check if allowedUpdate exists
         return allowedUpdates.includes(update);
     })
     if(!isValidOperation){
-        return res.status(400).send({error: "Invalid updates!" });
+        return res.status(400).send({error: "Invalid updates!" }); // if not, invalid update
     }
     try{
         const _id = req.params.id;
-        const user = await User.findByIdAndUpdate(_id,req.body,{new:true,runValidators:true});
+        const user = await User.findByIdAndUpdate(_id,req.body,{new:true,runValidators:true}); // find user
         if(!user){
-            return res.status(404).send();
+            return res.status(404).send(); // if user not found
         }
         res.status(200).send(user);
     }catch(e){
@@ -101,13 +101,13 @@ app.get('/tasks/:id',async(req,res)=>{
 })
 
 app.patch('/tasks/:id',async(req,res)=>{
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ["description","completed"];
-    isValidOperation = updates.every((update)=>{
+    const updates = Object.keys(req.body)  // get JSON keys
+    const allowedUpdates = ["description","completed"]; // allowed updates
+    isValidOperation = updates.every((update)=>{ // check if keys exist in allowed updates
         return allowedUpdates.includes(update);
     })
     if(!isValidOperation){
-        return res.status(400).send({error:"Invalid update!"});
+        return res.status(400).send({error:"Invalid update!"}); // if not, invalid update
     }
     const _id = req.params.id;
     try{
