@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const Task = require ("../models/task"); // Task model
 
-app.post("/tasks",async (req,res) =>{ // POST to tasks
+router.post("/tasks",async (req,res) =>{ // POST to tasks
     const task = new Task(req.body); // use the request as the JSON body
     try{
         await task.save();
@@ -11,7 +12,7 @@ app.post("/tasks",async (req,res) =>{ // POST to tasks
     }
 })
 
-app.get('/tasks',async (req,res)=>{
+router.get('/tasks',async (req,res)=>{
     try{
         const tasks = await Task.find({}); // find all (no params)
         res.status(200).send(tasks);
@@ -20,7 +21,7 @@ app.get('/tasks',async (req,res)=>{
     }        
 })
 
-app.get('/tasks/:id',async(req,res)=>{
+router.get('/tasks/:id',async(req,res)=>{
     const _id = req.params.id; // find by ID
     try{
         const task = await Task.findById(_id);
@@ -33,7 +34,7 @@ app.get('/tasks/:id',async(req,res)=>{
     }
 })
 
-app.patch('/tasks/:id',async(req,res)=>{
+router.patch('/tasks/:id',async(req,res)=>{
     const updates = Object.keys(req.body)  // get JSON keys
     const allowedUpdates = ["description","completed"]; // allowed updates
     isValidOperation = updates.every((update)=>{ // check if keys exist in allowed updates
@@ -54,7 +55,7 @@ app.patch('/tasks/:id',async(req,res)=>{
     }
 })
 
-app.delete("/tasks/:id",async(req,res)=>{
+router.delete("/tasks/:id",async(req,res)=>{
     try{
         const task = await Task.findByIdAndDelete(req.params.id); // find by id
         if(!task){

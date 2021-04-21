@@ -1,8 +1,6 @@
 // modules
 const express = require("express");
 require("./db/mongoose"); // require mongoose connection
-const User = require("./models/user"); // User model
-const Task = require ("./models/task"); // Task model
 const userRouter = require("./routers/user");
 const taskRouter = require("./routers/task");
 
