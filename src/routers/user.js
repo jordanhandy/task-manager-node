@@ -5,9 +5,10 @@ const User = require('../models/user');
 router.post("/users",async (req,res)=>{ // POST to users
     const user = new User(req.body); // use the request as the JSON body
     try{
+        const token = await user.generateAuthToken();
         // await the result of saving to db
         await user.save();
-        res.status(201).send(user); // if successful
+        res.status(201).send({user,token}); // if successful
     }catch(e){ 
         res.status(400).send(e); // if unsuccessful
     }
