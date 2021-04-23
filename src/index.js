@@ -17,9 +17,9 @@ const PORT = process.env.PORT || 3000; // set Port
 //     }
 // })
 
-app.use((req,res,next)=>{
-    res.status(503).send("Under maintenance");
-})
+// app.use((req,res,next)=>{
+//     res.status(503).send("Under maintenance");
+// })
 
 app.use(express.json()); // Receive JSON back from Express
 app.use(userRouter);
