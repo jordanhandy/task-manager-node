@@ -8,7 +8,7 @@ router.post("/users",async (req,res)=>{ // POST to users
     try{
         // await the result of saving to db
         await user.save();
-        const token = await user.generateAuthToken();
+        const token = await user.generateAuthToken(); // ge the token for a new acct
         res.status(201).send({user,token}); // if successful
     }catch(e){ 
         res.status(400).send(e); // if unsuccessful
@@ -26,6 +26,8 @@ router.post("/users/login",async(req,res)=>{
     }
 })
 
+// auth middleware only returns if valid user
+// send to user route
 router.get("/users/me",auth,async (req,res)=>{
     res.send(req.user);
 })

@@ -50,12 +50,16 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
+// define a method per instance of the model creation
 userSchema.methods.generateAuthToken = async function(){
-    const user = this;
+    const user = this; // create a user var
+    // create a token, and sign it with a payload of the user ID
+    // needs to be converted to String, because of mongo
     const token = jwt.sign({ _id:user.id.toString() },process.env.JWT_TOKEN);
+    // concat the token to the end of the user record that already exists
     user.tokens = user.tokens.concat({token});
     await user.save();
-    return token;
+    return token; // return the token
 
 }
 
