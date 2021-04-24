@@ -16,6 +16,8 @@ router.post("/users",async (req,res)=>{ // POST to users
 
 })
 
+// when a user logs in, fire the generateAuthToken model method
+// to automatically authenticate the user
 router.post("/users/login",async(req,res)=>{
     try{
         const user = await User.findByCredentials(req.body.email,req.body.password);
@@ -26,6 +28,8 @@ router.post("/users/login",async(req,res)=>{
     }
 })
 
+// filter out the token currently associated with the user session
+// re-save to db
 router.post("/users/logout",auth,async(req,res)=>{
     try{
         req.user.tokens=req.user.tokens.filter((token)=>{
@@ -39,6 +43,9 @@ router.post("/users/logout",auth,async(req,res)=>{
     }
 })
 
+// set the users token array to an empty array
+// save this to db.
+// Because there are no tokens in array, user is logged out
 router.post("/users/logoutAll",auth,async(req,res)=>{
     try{
         req.user.tokens = [];
@@ -56,20 +63,7 @@ router.get("/users/me",auth,async (req,res)=>{
     res.send(req.user);
 })
 
-router.get("/users/:id", async (req,res)=>{
-    const _id = req.params.id; // find by ID
-    try{
-        const user = await User.findById(_id);
-        if(!user){
-            return res.status(404).send(); // 404 if user not found
-        }
-        res.status(200).send(user); // otherwise, send user
-    }catch(e){
-        res.status(500).send(e);
-    }
-})
-
-router.patch('/users/:id',async(req,res) =>{
+router.patch('/users/me',auth,async(req,res) =>{
     const updates = Object.keys(req.body); // for updates, get keys of JSON params
     const allowedUpdates = ["name","email","password","age"]; // allowed update params
     isValidOperation = updates.every((update)=>{ // for every key, check if allowedUpdate exists
@@ -79,17 +73,12 @@ router.patch('/users/:id',async(req,res) =>{
         return res.status(400).send({error: "Invalid updates!" }); // if not, invalid update
     }
     try{
-        const _id = req.params.id;
-        const user = await User.findById(_id);
         updates.forEach((update) =>{
-            user[update] = req.body[update]
+            req.user[update] = req.body[update]
         })
-        await user.save();
+        await req.user.save();
         //const user = await User.findByIdAndUpdate(_id,req.body,{new:true,runValidators:true}); // find user
-        if(!user){
-            return res.status(404).send(); // if user not found
-        }
-        res.status(200).send(user);
+        res.status(200).send(req.user);
     }catch(e){
         res.status(400).send(e)
 
@@ -97,13 +86,11 @@ router.patch('/users/:id',async(req,res) =>{
 
 })
 
-router.delete("/users/:id",async(req,res) => {
+// delete currently auth'd user (auth) middleware
+router.delete("/users/me",auth,async(req,res) => {
     try{
-        const user = await User.findByIdAndDelete(req.params.id); // find user by id
-        if(!user){
-            return res.status(404).send(); // if user not found
-        }
-        res.status(200).send(user);
+        await req.user.remove();
+        res.status(200).send(req.user);
     }catch(e){
         res.status(500).send(e); // if error
     }
