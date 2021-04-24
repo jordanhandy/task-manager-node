@@ -17,6 +17,7 @@ const auth = async (req,res,next) =>{
         }
         // return the found user
         req.user=user;
+        req.token=token;
         next(); // continue with route
 
     }catch(e){

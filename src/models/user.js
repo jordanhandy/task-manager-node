@@ -50,6 +50,15 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
+userSchema.methods.toJSON = function () {
+    const user = this;
+    const userObject = user.toObject();
+    return userObject;
+
+    delete userObject.password;
+    delete userObject.token;
+}
+
 // define a method per instance of the model creation
 userSchema.methods.generateAuthToken = async function(){
     const user = this; // create a user var
