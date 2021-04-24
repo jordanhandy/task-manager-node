@@ -1,9 +1,15 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/auth");
 const Task = require ("../models/task"); // Task model
 
-router.post("/tasks",async (req,res) =>{ // POST to tasks
-    const task = new Task(req.body); // use the request as the JSON body
+router.post("/tasks",auth,async (req,res) =>{ // POST to tasks
+    const task = new Task({
+        ...req.body,
+        owner:req.user._id
+    }) // Spread the task body info found from the original request, (req.body.description)
+    // req.body.title.  We're also adding an owner property to the object, and this is
+    // the user ID passed back from the auth middleware
     try{
         await task.save();
         res.status(201).send(task);
