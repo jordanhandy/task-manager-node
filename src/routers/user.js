@@ -121,6 +121,15 @@ router.delete("/users/me",auth,async(req,res) => {
         res.status(500).send(e); // if error
     }
 })
+router.delete("/users/me/avatar",auth,async(req,res)=>{
+    try{
+        req.user.avatar = undefined; //? Delete the image binary in the avatar model field
+        await req.user.save(); //? Re-save the user
+        res.status(200).send({message:"Avatar removed"})
 
+    }catch(e){
+        res.status(500).send(e);
+    }
+})
 
 module.exports = router;
