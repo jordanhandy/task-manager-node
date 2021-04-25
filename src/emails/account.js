@@ -16,8 +16,22 @@ const sendWelcomeEmail = (email,name)=>{
     })
 
 }
+const sendGoodbyeEmail = async (email,name)=>{
+    await sgMail.send({
+        to:email,
+        from:'jordanwhandy@icloud.com',
+        subject:"Sorry to see you go! :(",
+        text:`Hey ${name}.  We're sad to see you go, but hope you come back soon`
+    }).then((mail) =>{
+        console.log("Mail sent successfully",mail)
+    }).catch((e)=>{
+        console.log("Unable to send mail.")
+    })
+
+}
 module.exports = {
-    sendWelcomeEmail
+    sendWelcomeEmail,
+    sendGoodbyeEmail
 }
 const msg = {    
     to:'handy.jordan@gmail.com',

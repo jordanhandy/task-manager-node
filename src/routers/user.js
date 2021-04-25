@@ -4,7 +4,7 @@ const auth = require("../middleware/auth");
 const router = new express.Router();
 const multer = require('multer');
 const sharp = require('sharp');
-const {sendWelcomeEmail} = require("../emails/account");
+const {sendWelcomeEmail, sendGoodbyeEmail} = require("../emails/account");
 
 
 router.post("/users",async (req,res)=>{ // POST to users
@@ -122,6 +122,7 @@ router.post("/users/me/avatar",auth,upload.single('avatar'),async(req,res)=>{
 router.delete("/users/me",auth,async(req,res) => {
     try{
         await req.user.remove();
+        await sendGoodbyeEmail(req.user.email,req.user.name);
         res.status(200).send(req.user);
     }catch(e){
         res.status(500).send(e); // if error
