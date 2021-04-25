@@ -62,6 +62,9 @@ userSchema.virtual('tasks',{
     foreignField:'owner'
 })
 
+//! This is run when res.send is called.  This happens before
+//! the send completes, as the data is converted to JSON
+//! delete unimportant data from being sent back
 userSchema.methods.toJSON = function () {
     const user = this;
     const userObject = user.toObject();

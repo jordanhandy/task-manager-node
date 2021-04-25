@@ -3,20 +3,8 @@ const User = require('../models/user');
 const auth = require("../middleware/auth");
 const router = new express.Router();
 const multer = require('multer');
-const upload = multer({
-    limits:{
-        fileSize: 1000000
-    },
-    fileFilter(req,file,cb){
-        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
-            return cb(new Error("Please upload an image file"));
-        }
-        cb(undefined,true);
-        // cb(new Error("File must be an image"));
-        // cb(undefined,true);
-        // cb(undefined,false)
-    }
-});
+const sharp = require('sharp');
+
 
 router.post("/users",async (req,res)=>{ // POST to users
     const user = new User(req.body); // use the request as the JSON body
@@ -101,9 +89,25 @@ router.patch('/users/me',auth,async(req,res) =>{
 
 })
 
+
+const upload = multer({
+    limits:{
+        fileSize: 1000000
+    },
+    fileFilter(req,file,cb){
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+            return cb(new Error("Please upload an image file"));
+        }
+        cb(undefined,true);
+        // cb(new Error("File must be an image"));
+        // cb(undefined,true);
+        // cb(undefined,false)
+    }
+});
 // for uploading profile picture
 router.post("/users/me/avatar",auth,upload.single('avatar'),async(req,res)=>{
-    req.user.avatar = req.file.buffer //? Save the buffer data to the user avatar field
+    const buffer = await sharp(req.file.buffer).resize({width: 300,fit:'cover'}).png().toBuffer()
+    req.user.avatar = buffer //? get image from sharp buffer
     console.log(req.file.buffer);
     await req.user.save(); //? Save to user profile
     res.send();
@@ -139,7 +143,7 @@ router.get('/users/:id/avatar',async (req,res)=>{
         if(!user || !user.avatar){
             throw new Error();
         }
-        res.set('Content-Type','image/jpg');
+        res.set('Content-Type','image/png'); //? Always getting a png from sharp
         res.send(user.avatar)
 
     }catch(e){
