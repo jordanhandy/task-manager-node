@@ -9,6 +9,12 @@ const app = express(); // set up Express
 const PORT = process.env.PORT || 3000; // set Port
 
 const multer = require("multer");
+const upload = multer({
+    dest: 'images'
+})
+app.post('/upload',upload.single('upload'),(req,res)=>{
+    res.send()
+})
 
 app.use(express.json()); // Receive JSON back from Express
 app.use(userRouter);
