@@ -9,7 +9,7 @@ const upload = multer({
         fileSize: 1000000
     },
     fileFilter(req,file,cb){
-        if(!file.originalname.match(/\.(jpg | jpeg | png )$/)){
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
             return cb(new Error("Please upload an image file"));
         }
         cb(undefined,true);
@@ -104,11 +104,10 @@ router.patch('/users/me',auth,async(req,res) =>{
 
 // for uploading profile picture
 router.post("/users/me/avatar",upload.single('avatar'),(req,res)=>{
+    res.send();
     //* MULTER IS CONFIGURED ABOVE
 },(error,req,res,next)=>{
-    res.send(500).send({
-        error:error.message
-    })
+    res.status(500).send({error: error.message})
 })
 
 // delete currently auth'd user (auth) middleware
