@@ -2,6 +2,10 @@ const express = require('express');
 const User = require('../models/user');
 const auth = require("../middleware/auth");
 const router = new express.Router();
+const multer = require('multer');
+const upload = multer({
+    dest:'avatars'
+});
 
 router.post("/users",async (req,res)=>{ // POST to users
     const user = new User(req.body); // use the request as the JSON body
@@ -84,6 +88,11 @@ router.patch('/users/me',auth,async(req,res) =>{
 
     }
 
+})
+
+// for uploading profile picture
+router.post("/users/me/avatar",upload.single('avatar'),(req,res)=>{
+    res.send();
 })
 
 // delete currently auth'd user (auth) middleware
