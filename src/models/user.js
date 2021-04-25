@@ -65,10 +65,10 @@ userSchema.virtual('tasks',{
 userSchema.methods.toJSON = function () {
     const user = this;
     const userObject = user.toObject();
-    return userObject;
-
     delete userObject.password;
     delete userObject.token;
+    delete userObject.avatar;
+    return userObject;
 }
 
 // define a method per instance of the model creation
