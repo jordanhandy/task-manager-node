@@ -17,11 +17,24 @@ router.post("/tasks",auth,async (req,res) =>{ // POST to tasks
         res.status(400).send(error);
     }
 })
-
+//* GET /tasks?completed=true | false
+//* GET /tasks?limit=10&skip=10
 router.get('/tasks',auth,async (req,res)=>{
+    const match = {};
+        if(req.query.completed){
+            match.completed = req.query.completed === "true" 
+        }
     try{
-        const tasks = await Task.find({ owner: req.user._id }); // find all (no params)
-        res.status(200).send(tasks);
+        //? This find criteria comes from the returned userID from the auth middleware
+        const tasks = await req.user.populate({
+            path: 'tasks',
+            match,
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip)
+            }
+        }).execPopulate(); //? find all (comes from the relationship between users and task [see model])
+        res.status(200).send(req.user.tasks);
     }catch(e){
         res.status(500).send(e);
     }        
