@@ -4,7 +4,6 @@ const auth = require("../middleware/auth");
 const router = new express.Router();
 const multer = require('multer');
 const upload = multer({
-    dest:'avatars',
     limits:{
         fileSize: 1000000
     },
@@ -103,11 +102,14 @@ router.patch('/users/me',auth,async(req,res) =>{
 })
 
 // for uploading profile picture
-router.post("/users/me/avatar",upload.single('avatar'),(req,res)=>{
+router.post("/users/me/avatar",auth,upload.single('avatar'),async(req,res)=>{
+    req.user.avatar = req.file.buffer //? Save the buffer data to the user avatar field
+    console.log(req.file.buffer);
+    await req.user.save(); //? Save to user profile
     res.send();
     //* MULTER IS CONFIGURED ABOVE
 },(error,req,res,next)=>{
-    res.status(500).send({error: error.message})
+    res.status(400).send({error: error.message})
 })
 
 // delete currently auth'd user (auth) middleware
