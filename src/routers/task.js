@@ -19,10 +19,16 @@ router.post("/tasks",auth,async (req,res) =>{ // POST to tasks
 })
 //* GET /tasks?completed=true | false
 //* GET /tasks?limit=10&skip=10
+//* GET /tasks?sortBy=createdAt_asc | createdAt_desc
 router.get('/tasks',auth,async (req,res)=>{
     const match = {};
+    const sort = {};
         if(req.query.completed){
             match.completed = req.query.completed === "true" 
+        }
+        if(req.query.sortBy){
+            const parts = req.query.sortBy.split("_");
+            sort[parts[0]] = parts[1] === 'desc' ? -1 : 1;
         }
     try{
         //? This find criteria comes from the returned userID from the auth middleware
@@ -31,7 +37,8 @@ router.get('/tasks',auth,async (req,res)=>{
             match,
             options: {
                 limit: parseInt(req.query.limit),
-                skip: parseInt(req.query.skip)
+                skip: parseInt(req.query.skip),
+                sort
             }
         }).execPopulate(); //? find all (comes from the relationship between users and task [see model])
         res.status(200).send(req.user.tasks);
