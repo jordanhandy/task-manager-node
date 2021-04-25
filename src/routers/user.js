@@ -4,6 +4,7 @@ const auth = require("../middleware/auth");
 const router = new express.Router();
 const multer = require('multer');
 const sharp = require('sharp');
+const {sendWelcomeEmail} = require("../emails/account");
 
 
 router.post("/users",async (req,res)=>{ // POST to users
@@ -11,6 +12,7 @@ router.post("/users",async (req,res)=>{ // POST to users
     try{
         // await the result of saving to db
         await user.save();
+        sendWelcomeEmail(user.email,user.name)
         const token = await user.generateAuthToken(); // ge the token for a new acct
         res.status(201).send({user,token}); // if successful
     }catch(e){ 

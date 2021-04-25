@@ -1,12 +1,12 @@
 // modules
-require("dotenv").config();
+require('dotenv').config();
 const express = require("express");
 require("./db/mongoose"); // require mongoose connection
 const userRouter = require("./routers/user");
 const taskRouter = require("./routers/task");
 
 const app = express(); // set up Express
-const PORT = process.env.PORT || 3000; // set Port
+const PORT = process.env.PORT; // set Port
 
 const multer = require("multer");
 const upload = multer({
