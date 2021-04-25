@@ -1,8 +1,10 @@
-require('dotenv').config();
-const sgMail = require('@sendgrid/mail');
+require('dotenv').config(); // import for environment variables
+const sgMail = require('@sendgrid/mail'); // sendgrid api
 const apiKey = process.env.SENDGRID_KEY;
 sgMail.setApiKey(apiKey);
 
+// Object for sending sendgrid emails.  These are passed to this function
+// when a user is first created
 const sendWelcomeEmail = (email,name)=>{
     sgMail.send({
         to:email,
@@ -16,6 +18,9 @@ const sendWelcomeEmail = (email,name)=>{
     })
 
 }
+
+// Object for sending sendgrid emails.  These are passed to this function
+// when a user is deleted from the database
 const sendGoodbyeEmail = async (email,name)=>{
     await sgMail.send({
         to:email,
