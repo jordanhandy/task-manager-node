@@ -4,7 +4,19 @@ const auth = require("../middleware/auth");
 const router = new express.Router();
 const multer = require('multer');
 const upload = multer({
-    dest:'avatars'
+    dest:'avatars',
+    limits:{
+        fileSize: 1000000
+    },
+    fileFilter(req,file,cb){
+        if(!file.originalname.match(/\.(jpg | jpeg | png )$/)){
+            return cb(new Error("Please upload an image file"));
+        }
+        cb(undefined,true);
+        // cb(new Error("File must be an image"));
+        // cb(undefined,true);
+        // cb(undefined,false)
+    }
 });
 
 router.post("/users",async (req,res)=>{ // POST to users
@@ -92,7 +104,7 @@ router.patch('/users/me',auth,async(req,res) =>{
 
 // for uploading profile picture
 router.post("/users/me/avatar",upload.single('avatar'),(req,res)=>{
-    res.send();
+    //* MULTER IS CONFIGURED ABOVE
 })
 
 // delete currently auth'd user (auth) middleware
