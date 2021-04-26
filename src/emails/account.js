@@ -11,11 +11,12 @@ const sendWelcomeEmail = (email,name)=>{
         from:'jordanwhandy@icloud.com',
         subject:"Thanks for signing up!",
         text:`Hey ${name}.  Welcome to the app.  Let me know how you like it`
-    }).then((mail) =>{
-        console.log("Mail sent successfully",mail)
-    }).catch((e)=>{
-        console.log("Unable to send mail.")
     })
+    // .then((mail) =>{
+    //     console.log("Mail sent successfully",mail)
+    // }).catch((e)=>{
+    //     console.log("Unable to send mail.")
+    // })
 
 }
 
@@ -27,11 +28,12 @@ const sendGoodbyeEmail = async (email,name)=>{
         from:'jordanwhandy@icloud.com',
         subject:"Sorry to see you go! :(",
         text:`Hey ${name}.  We're sad to see you go, but hope you come back soon`
-    }).then((mail) =>{
-        console.log("Mail sent successfully",mail)
-    }).catch((e)=>{
-        console.log("Unable to send mail.")
     })
+    // .then((mail) =>{
+    //     console.log("Mail sent successfully",mail)
+    // }).catch((e)=>{
+    //     console.log("Unable to send mail.")
+    // })
 
 }
 module.exports = {
