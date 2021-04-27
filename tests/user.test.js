@@ -1,26 +1,10 @@
 const request = require('supertest'); //* This is the testing library provided by Express team
-const jwt = require('jsonwebtoken'); // To provide login tokens for logged in users
-const mongoose = require('mongoose'); // to perform Model operations
 const app = require('../src/app'); // to allow us to access express without running it
 const User = require('../src/models/user'); // to access user model
+const { userOne, userOneId, setupDatabase } = require("./fixtures/db");
 
-//? Generate our Own user ID so that it is consistent at each test
-const userOneId = new mongoose.Types.ObjectId();
-const userOne = {
-    _id: userOneId,
-    name:"Jason Hidalgo",
-    email:"jason@testsuite.com",
-    password:"what561.ca",
-    tokens: [{
-        token: jwt.sign({_id: userOneId},process.env.JWT_TOKEN)
-    }]
-}
 
-beforeEach(async ()=>{
-    await User.deleteMany();
-    await new User(userOne).save();
-    
-})
+beforeEach(setupDatabase);
 
 test('Should signup a new user',async()=>{
     await request(app).post('/users')
@@ -95,7 +79,7 @@ test('Should update valid user fields',async()=>{
         password:"abc123klm"
     })
     .expect(200)
-    
+
     const user = await User.findById(userOneId);
     expect(user.email).toBe("updated@example.com")
 
