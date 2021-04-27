@@ -40,6 +40,4 @@ test('Should not be able to delete not owned task',async()=>{
     .expect(404)
     const task = await Task.findById(taskOne._id);
     expect(task).not.toBeNull();
-
-
 })
